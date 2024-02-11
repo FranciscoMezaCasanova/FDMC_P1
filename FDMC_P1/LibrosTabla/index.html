@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <title>Libros</title>
+</head>
+<body>
+
+    <!-- Tabla -->
+
+    <table class="table" id="Tabla">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Año</th>
+            <th scope="col">Numero de Paginas</th>
+            <th scope="col">ISBN</th>
+            <th scope="col">Capitulos</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    
+    <!-- Tabla -->
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: 'libros.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    data.forEach(function(libro) {
+                        var capitulos = '';
+                        $.each(libro.Capitulos, function(capitulo, paginas){
+                            capitulos += `${capitulo}: ${paginas}<br>`;
+                        });
+                        $('#Tabla tbody').append(`
+                            <tr>
+                                <td>${libro.Nombre}</td>
+                                <td>${libro.Autor}</td>
+                                <td>${libro.Año}</td>
+                                <td>${libro['Numero Paginas']}</td>
+                                <td>${libro.ISBN}</td>
+                                <td>${capitulos}</td>
+                            </tr>
+                        `);
+                    });
+                    $('#Tabla').DataTable();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al obtener los datos:', error);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Libros</title>
+</head>
+<body>
+    <button id="btnModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#miModal">
+        Lista de libros
+    </button>
+
+    <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Lista de Libros</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ListaModal">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $("#btnModal").on("click", function() {
+                $.ajax({
+                    url: "libros.php",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(datos) {
+                        var ListaModal = "<ul>";
+                        $.each(datos, function(index, libro) {
+                            ListaModal += "<li>" +
+                                "<strong>Nombre:</strong> " + libro.Nombre + "<br>" +
+                                "<strong>Autor:</strong> " + libro.Autor + "<br>" +
+                                "<strong>Año:</strong> " + libro.Año + "<br>" +
+                                "<strong>Número de Páginas:</strong> " + libro['Numero Paginas'] + "<br>" +
+                                "<strong>ISBN:</strong> " + libro.ISBN + "<br>" +
+                                "<strong>Capítulos:</strong> <ul>";
+
+                            $.each(libro.Capitulos, function(capitulo, contenido) {
+                                ListaModal += "<li>" + capitulo + ": " + contenido + "</li>";
+                            });
+
+                            ListaModal += "</ul></li>";
+                        });
+                        ListaModal += "</ul>";
+                        $("#ListaModal").html(ListaModal);
+                        $("#miModal").modal("show");
+                    },
+                    error: function(error) {
+                        console.log("Error al cargar datos: " + JSON.stringify(error));
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
