@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <title>Libros</title>
+</head>
+<body>
+    <button id="btnModal" class="btn btn-primary">
+        Lista de libros
+    </button>
+
+    <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Lista de Libros</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ListaModal">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <script>
+    $(document).ready(function() {
+    $("#btnModal").on("click", function() {
+        $.ajax({
+                url: "libros.php", 
+                type: "GET",
+                dataType: "json",
+                success: function(datos) {
+                    var ListaModal = "<ul>";
+                    $.each(datos, function(index, libro) {
+                        ListaModal += "<li>" + 
+                            "Nombre: " + libro.Nombre + 
+                            " - Autor: " + libro.Autor + 
+                            " - Año: " + libro.Año + 
+                            " - Páginas: " + libro.NumeroPaginas + 
+                            " - ISBN: " + libro.ISBN + 
+                            " - Capítulos: ";
+
+                        $.each(libro.Capitulos, function(capitulo, paginas) {
+                            ListaModal += "<li>" + capitulo + ": " + paginas + "</li>";
+                        });
+                        ListaModal += "</li><br><br>";
+                    });
+                    $("#ListaModal").html(ListaModal);
+                    $("#miModal").modal("show");
+                },
+                error: function(error) {
+                    console.log("Error al cargar datos: " + JSON.stringify(error));
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
